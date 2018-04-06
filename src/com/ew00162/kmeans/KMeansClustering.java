@@ -5,6 +5,8 @@ package com.ew00162.kmeans;
 
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
@@ -41,6 +43,23 @@ public class KMeansClustering {
 	// List of points
 	private ArrayList<Point2D.Double> points = new ArrayList<Point2D.Double>();
 	
+	// HashMap to map centroids to points
+	private HashMap<Point2D.Double, Point2D.Double> clusters = new HashMap<Point2D.Double, Point2D.Double>();
+	
+	/**
+	 * @return the clusters
+	 */
+	public HashMap<Point2D.Double, Point2D.Double> getClusters() {
+		return clusters;
+	}
+	
+	/**
+	 * @return the points
+	 */
+	public ArrayList<Point2D.Double> getPoints() {
+		return points;
+	}
+	
 	// List of centroids
 	// centroids.size() is K
 	private ArrayList<Point2D.Double> centroids = new ArrayList<Point2D.Double>();
@@ -52,11 +71,18 @@ public class KMeansClustering {
 		return centroids;
 	}
 
-
 	// List of nearest centroids
 	// index(i) of this is the nearest centroid for index(i) of points
 	private ArrayList<Point2D.Double> nearestCentroids = new ArrayList<Point2D.Double>();
-	
+
+	/**
+	 * @return the nearestCentroids
+	 */
+	public ArrayList<Point2D.Double> getNearestCentroids() {
+		return nearestCentroids;
+	}
+
+
 	// Centroids changed?
 	private boolean changed = false;
 		
@@ -101,11 +127,6 @@ public class KMeansClustering {
 			// Add new point to the list of points
 			centroids.add(newPoint);
 			
-		}
-		
-		// TESTING
-		for (int j = 0; j < K; j++) {
-			System.out.println(centroids.get(j));
 		}
 		
 	}
@@ -189,7 +210,7 @@ public class KMeansClustering {
 		    	}
 		    	
 		    	// TESTING
-			    System.out.println(arr[i][j]);
+			    //System.out.println(arr[i][j]);
 		    	
 		    }
 		    
@@ -218,7 +239,7 @@ public class KMeansClustering {
 				changed = true;
 				
 				// TESTING
-				System.out.println("NEW CENTROID: " + newCentroid);
+				//System.out.println("NEW CENTROID: " + newCentroid);
 			}
 			
 		}
@@ -229,14 +250,45 @@ public class KMeansClustering {
 		createClusters();
 		}
 		
+	}
+	
+
+	/**
+	 * @param centroid
+	 * @return the points in a cluster
+	 */
+	public ArrayList<Point2D.Double> getClusterValuesForCentroid(Point2D.Double centroid) {
 		
+		// Assign to HashMap clusters
+		// Index(i) of nearestCentroids is the nearest centroid for index(i) of points		
+		for(int i = 0; i < points.size(); i++) {
+					
+			// Now, each point is associated to its nearest centroid
+			clusters.put(points.get(i), nearestCentroids.get(i));
+					
+		}
+
+		ArrayList<Point2D.Double> clusterValues = new ArrayList<Point2D.Double>();
+		
+		for (Map.Entry<Point2D.Double, Point2D.Double> entry : clusters.entrySet()) {
+			if (entry.getValue().equals(centroid)) {
+				clusterValues.add(entry.getKey());
+			}
+		}
+			
+		return clusterValues;
+	}
+	
+	/**
+	 * For each centroid, print all points in that centroid's cluster
+	 */
+	public void printAllClusters() {
+		
+		for (int i = 0; i < centroids.size(); i++) {
+			System.out.println("CLUSTER FOR CENTROID " + centroids.get(i) + ": " + getClusterValuesForCentroid(centroids.get(i)));
+		}
 		
 	}
-
-
-	
-	
-	
 	
 	
 }
