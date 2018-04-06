@@ -259,20 +259,15 @@ public class KMeansClustering {
 	 */
 	public ArrayList<Point2D.Double> getClusterValuesForCentroid(Point2D.Double centroid) {
 		
+		ArrayList<Point2D.Double> clusterValues = new ArrayList<Point2D.Double>();
+		
 		// Assign to HashMap clusters
 		// Index(i) of nearestCentroids is the nearest centroid for index(i) of points		
 		for(int i = 0; i < points.size(); i++) {
-					
+			
+			if (nearestCentroids.get(i).equals(centroid)) {
 			// Now, each point is associated to its nearest centroid
-			clusters.put(points.get(i), nearestCentroids.get(i));
-					
-		}
-
-		ArrayList<Point2D.Double> clusterValues = new ArrayList<Point2D.Double>();
-		
-		for (Map.Entry<Point2D.Double, Point2D.Double> entry : clusters.entrySet()) {
-			if (entry.getValue().equals(centroid)) {
-				clusterValues.add(entry.getKey());
+			clusterValues.add(points.get(i));
 			}
 		}
 			
